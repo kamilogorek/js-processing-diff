@@ -1,0 +1,27 @@
+{
+  "name": "js-processing-diff",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "got": "^12.5.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.24.0",
+    "prettier": "^2.7.1"
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "es2022": true
+    },
+    "parserOptions": {
+      "sourceType": "module"
+    }
+  },
+  "prettier": {
+    "printWidth": 120
+  }
+}
