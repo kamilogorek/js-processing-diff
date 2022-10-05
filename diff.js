@@ -13,6 +13,9 @@ const FRAME_ATTRIBUTES = [
 
 const ADDITIONAL_FRAMES_ATTRIBUTE = ["module", "in_app"];
 
+const trimIfString = (value) => (typeof value === "string" ? value.trim() : value);
+const normalizeValue = (value) => trimIfString(Array.isArray(value) ? value.map(trimIfString).join("\n") : value);
+
 export function diff(event) {
   let eventValid = true;
 
@@ -29,18 +32,14 @@ export function diff(event) {
       const oldFrame = frame;
       const newFrame = frame.data.smcache_frame;
 
-      const invalidAttrs = [];
-
-      for (const attr of [...FRAME_ATTRIBUTES, ...ADDITIONAL_FRAMES_ATTRIBUTE]) {
-        const oldValue = Array.isArray(oldFrame[attr]) ? oldFrame[attr].join("\n") : oldFrame[attr];
-        const newValue = Array.isArray(newFrame[attr]) ? newFrame[attr].join("\n") : newFrame[attr];
-
-        if (oldValue !== newValue) {
-          invalidAttrs.push(attr);
+      const invalidAttrs = [...FRAME_ATTRIBUTES, ...ADDITIONAL_FRAMES_ATTRIBUTE].filter((attr) => {
+        if (normalizeValue(oldFrame[attr]) !== normalizeValue(newFrame[attr])) {
           exceptionValid = false;
           eventValid = false;
+          return true;
         }
-      }
+        return false;
+      });
 
       if (invalidAttrs.length === 0) {
         console.log(chalk.green(`  ✔ Frame ${frameIndex}`));
